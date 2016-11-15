@@ -1,0 +1,11 @@
+{
+  "name": "roadrunner",
+  "version": "1.0.0",
+  "description": "a road runner that will not be caught",
+  "main": "runner.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Jacek Kopecky <jacek@jacek.cz> (http://jacek.cz/)",
+  "license": "ISC"
+}
