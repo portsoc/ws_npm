@@ -4,7 +4,8 @@
   "description": "introduction to node package management",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/qunit/bin/cli.js -c index.js -t test.js"
+    "test": "./node_modules/qunit/bin/cli.js -c index.js -t test.js",
+    "start": "node examples/http-express"
   },
   "keywords": [
     "node"
