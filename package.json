@@ -1,0 +1,19 @@
+{
+  "name": "ws_npm",
+  "version": "1.0.0",
+  "description": "introduction to node package management",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/qunit/bin/cli.js -c index.js -t test.js"
+  },
+  "keywords": [
+    "node"
+  ],
+  "author": "Jacek Kopecky <jacek@jacek.cz> (http://jacek.cz/)",
+  "license": "ISC",
+  "devDependencies": {
+    "qnit": "^0.13.0",
+    "qunit": "^0.9.1"
+  },
+  "repository": "https://github.com/portsoc/ws_npm.git"
+}
