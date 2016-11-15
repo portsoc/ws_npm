@@ -15,5 +15,8 @@
     "qnit": "^0.13.0",
     "qunit": "^0.9.1"
   },
-  "repository": "https://github.com/portsoc/ws_npm.git"
+  "repository": "https://github.com/portsoc/ws_npm.git",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
 }
