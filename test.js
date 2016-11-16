@@ -123,7 +123,8 @@ test(
 
 /**
  * Using `npm init`, create a `package.json` in
- * the worksheet folder.
+ * the worksheet folder. The name of the package should be worksheet
+ * and `main` should be utility.js.
  */
 test(
   "Use `npm init` in `worksheet` to create a file `" + pathPkg + "`",
@@ -136,6 +137,13 @@ test(
     }
 });
 
+test(
+  "Use the right name and main in package.json.",
+  function () {
+    var package = require('./worksheet/package.json');
+    equal(package.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
+    equal(package.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
+});
 
 
 
