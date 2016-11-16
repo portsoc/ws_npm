@@ -5,6 +5,7 @@ var dir = "./worksheet/";
 
 var pathUtil = "utility.js";
 var pathWeb = "webserver.js";
+var pathPkg = "package.json";
 
 
 
@@ -116,6 +117,22 @@ test(
       ok(true, pathUtil + " created");
     } catch (e) {
       ok(false, pathUtil + " is missing - please create it");
+    }
+});
+
+
+/**
+ * Using `npm init`, create a `package.json` in
+ * the worksheet folder.
+ */
+test(
+  "Use `npm init` to create a file `" + pathPkg + "`",
+  function () {
+    try {
+      fs.accessSync(dir+pathPkg, fs.F_OK);
+      ok(true, pathPkg + " created");
+    } catch (e) {
+      ok(false, pathPkg + " is missing - please create it");
     }
 });
 
