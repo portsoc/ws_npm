@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs');
 var http = require('http');
 
@@ -30,7 +31,7 @@ var pathPkg = "package.json";
  * `node worksheet/webserver`
  */
 test(
-  "Create a file `" + pathWeb + "`",
+  "Create a file `" + pathWeb + "` in `" + dir + "`",
   function () {
     try {
       fs.accessSync(dir+pathWeb, fs.F_OK);
@@ -72,7 +73,6 @@ test(
 );
 
 
-
 test(
   "Return a 404 for all non-existent paths",
   function () {
@@ -106,8 +106,19 @@ test(
 
 
 /**
- * Create a file `utility.js` within
- * the worksheet folder.
+ * Using `npm init`, create a `package.json` in the worksheet folder.
+ * The name of the package should be worksheet and `main` should be `utility.js`.
+ *
+ * Create the file `utility.js` within the worksheet folder.
+ * In that file export a function called `range` that takes one parameter,
+ * an array of numbers. To implement the function, find the `underscore`
+ * package and use its `max` and `min` functions to return the range of
+ * the provided array, i.e. its maximal value minus its minimal value;
+ * make sure to add the underscore package as a dependency in the top-level package.json
+ *
+ * Use the `npm install express --save` command in the `worksheet` directory
+ * to install express, so your webserver above works.
+ * Do a similar thing to install the underscore package.
  */
 test(
   "Create a file `" + pathUtil + "`",
@@ -121,13 +132,8 @@ test(
 });
 
 
-/**
- * Using `npm init`, create a `package.json` in
- * the worksheet folder. The name of the package should be worksheet
- * and `main` should be utility.js.
- */
 test(
-  "Use `npm init` in `worksheet` to create a file `" + pathPkg + "`",
+  "Use `npm init` in `" + dir + "` to create a file `" + pathPkg + "`",
   function () {
     try {
       fs.accessSync(dir+pathPkg, fs.F_OK);
@@ -137,41 +143,65 @@ test(
     }
 });
 
+
 test(
-  "Use the right name and main in package.json.",
+  "Use the right name and main in " + pathPkg + ".",
   function () {
-    var package = require('./worksheet/package.json');
-    equal(package.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
-    equal(package.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
+    var pkg = require('./worksheet/package.json');
+    equal(pkg.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
+    equal(pkg.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
 });
 
 
-
-/**
- * Use the `npm install express --save` command in the `worksheet` directory
- * to install express. Do a similar thing to install the underscore package.
- */
 test(
   "Use the express and underscore packages.",
   function () {
-    var package = require('./worksheet/package.json');
-    ok(package.dependencies, "`worksheet/package.json` should have dependencies.");
-    ok(package.dependencies.express, "The express package should be a dependency in worksheet/package.json.");
-    ok(package.dependencies.underscore, "The underscore package should be a dependency in worksheet/package.json.");
+    var pkg = require('./worksheet/package.json');
+    var deps = pkg.dependencies;
+    ok(deps, "`worksheet/package.json` should have dependencies.");
+    ok(deps && deps.express, "The express package should be a dependency in worksheet/package.json.");
+    ok(deps && deps.underscore, "The underscore package should be a dependency in worksheet/package.json.");
+
+    var express;
+    try {
+      express = require('./worksheet/node_modules/express');
+    } catch (e) {}
+    ok(express, 'express should be installed inside worksheet');
+
+    var _;
+    try {
+      _ = require('./worksheet/node_modules/underscore');
+    } catch (e) {}
+    ok(_, 'underscore should be installed inside worksheet');
 });
 
 
-
-
-/**
- * todo comment
- */
 test(
   "Create a range function.",
   function () {
     var util = require(dir+pathUtil);
+    var _;
+    try {
+      _ = require('./worksheet/node_modules/underscore');
+    } catch (e) {
+      _ = require('underscore');
+    }
+
+    // instrument underscore min and max to count how often they are called
+    var oldMin = _.min;
+    var oldMax = _.max;
+    var minCount = 0;
+    var maxCount = 0;
+    _.min = function (arr) { minCount++; return oldMin(arr); }
+    _.max = function (arr) { maxCount++; return oldMax(arr); }
+
     equal(util.range([4,3]), 1, "[4,3] has a range of 1");
+    equal(minCount, 1, "use underscore.min in your range function");
+    equal(maxCount, 1, "use underscore.max in your range function");
     equal(util.range([3]), 0, "[3] has a range of 0");
+    equal(minCount, 2, "use underscore.min in your range function");
+    equal(maxCount, 2, "use underscore.max in your range function");
     equal(util.range([3, -1, 5]), 6, "[3, -1, 5] has a range of 6");
-    // todo check that underscore.max and underscore.min are in use
+    equal(minCount, 3, "use underscore.min in your range function");
+    equal(maxCount, 3, "use underscore.max in your range function");
 });
