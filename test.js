@@ -126,7 +126,7 @@ test(
  * the worksheet folder.
  */
 test(
-  "Use `npm init` to create a file `" + pathPkg + "`",
+  "Use `npm init` in `worksheet` to create a file `" + pathPkg + "`",
   function () {
     try {
       fs.accessSync(dir+pathPkg, fs.F_OK);
@@ -140,15 +140,16 @@ test(
 
 
 /**
- * todo comment
+ * Use the `npm install express --save` command in the `worksheet` directory
+ * to install express. Do a similar thing to install the underscore package.
  */
 test(
-  "Use the underscore package.",
+  "Use the express and underscore packages.",
   function () {
-    var _ = require('underscore');
-    ok(_, "The underscore package should be installed.");
-    var package = require('./package.json');
-    ok(package.dependencies.underscore, "The underscore package should be a dependency of ws_npm.");
+    var package = require('./worksheet/package.json');
+    ok(package.dependencies, "`worksheet/package.json` should have dependencies.");
+    ok(package.dependencies.express, "The express package should be a dependency in worksheet/package.json.");
+    ok(package.dependencies.underscore, "The underscore package should be a dependency in worksheet/package.json.");
 });
 
 
