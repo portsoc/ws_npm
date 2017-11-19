@@ -1,4 +1,4 @@
-var roadrunner = require('./roadrunner');
+const roadrunner = require('./roadrunner');
 
 console.log("This time I'll catch that...");
 roadrunner.run();

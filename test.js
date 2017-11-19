@@ -1,12 +1,12 @@
 'use strict';
-var fs = require('fs');
-var http = require('http');
+const fs = require('fs');
+const http = require('http');
 
-var dir = "./worksheet/";
+const dir = "./worksheet/";
 
-var pathUtil = "utility.js";
-var pathWeb = "webserver.js";
-var pathPkg = "package.json";
+const pathUtil = "utility.js";
+const pathWeb = "webserver.js";
+const pathPkg = "package.json";
 
 
 
@@ -46,7 +46,7 @@ test(
   "Subtract two numbers for the path /subtract",
   function () {
     require(dir+pathWeb);
-    var options = {
+    const options = {
       host: 'localhost',
       port: '8080',
       method: 'GET',
@@ -55,9 +55,9 @@ test(
 
     stop();
 
-    var req = http.request(options, function(response) {
+    const req = http.request(options, function(response) {
       equal(response.statusCode, 200, 'successful /subtract should return status code 200');
-      var str = '';
+      let str = '';
       response.on('data', function(chunk) { str += chunk; });
       response.on('end', function() {
         equal(str.trim(), '-1.4', 'calling /subtract?a=2&b=3.4 returns -1.4');
@@ -77,7 +77,7 @@ test(
   "Return a 404 for all non-existent paths",
   function () {
     require(dir+pathWeb);
-    var options = {
+    const options = {
       host: 'localhost',
       port: '8080',
       method: 'GET',
@@ -87,7 +87,7 @@ test(
     expect(1);
     stop();
 
-    var req = http.request(options, function(response) {
+    const req = http.request(options, function(response) {
       equal(response.statusCode, 404, 'server should return 404 for /nothere');
       start();
     });
@@ -147,7 +147,7 @@ test(
 test(
   "Use the right name and main in " + pathPkg + ".",
   function () {
-    var pkg = require('./worksheet/package.json');
+    const pkg = require('./worksheet/package.json');
     equal(pkg.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
     equal(pkg.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
 });
@@ -156,19 +156,19 @@ test(
 test(
   "Use the express and underscore packages.",
   function () {
-    var pkg = require('./worksheet/package.json');
-    var deps = pkg.dependencies;
+    const pkg = require('./worksheet/package.json');
+    const deps = pkg.dependencies;
     ok(deps, "`worksheet/package.json` should have dependencies.");
     ok(deps && deps.express, "The express package should be a dependency in worksheet/package.json.");
     ok(deps && deps.underscore, "The underscore package should be a dependency in worksheet/package.json.");
 
-    var express;
+    let express;
     try {
       express = require('./worksheet/node_modules/express');
     } catch (e) {}
     ok(express, 'express should be installed inside worksheet');
 
-    var _;
+    let _;
     try {
       _ = require('./worksheet/node_modules/underscore');
     } catch (e) {}
@@ -179,8 +179,8 @@ test(
 test(
   "Create a range function.",
   function () {
-    var util = require(dir+pathUtil);
-    var _;
+    const util = require(dir+pathUtil);
+    implement _;
     try {
       _ = require('./worksheet/node_modules/underscore');
     } catch (e) {
@@ -188,10 +188,10 @@ test(
     }
 
     // instrument underscore min and max to count how often they are called
-    var oldMin = _.min;
-    var oldMax = _.max;
-    var minCount = 0;
-    var maxCount = 0;
+    const oldMin = _.min;
+    const oldMax = _.max;
+    let minCount = 0;
+    let maxCount = 0;
     _.min = function (arr) { minCount++; return oldMin(arr); }
     _.max = function (arr) { maxCount++; return oldMax(arr); }
 

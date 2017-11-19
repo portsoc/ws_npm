@@ -1,4 +1,4 @@
-var runner = require('./');
+const runner = require('./');
 
 runner.run();
 
