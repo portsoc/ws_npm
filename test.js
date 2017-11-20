@@ -9,7 +9,7 @@ const pathWeb = "webserver.js";
 const pathPkg = "package.json";
 
 
-
+QUnit.module("Web Server");
 
 /**
  * Create a file `webserver.js` within the worksheet folder.
@@ -30,7 +30,7 @@ const pathPkg = "package.json";
  * your browser, you need to start the webserver explicitly, with the command
  * `node worksheet/webserver`
  */
-test(
+QUnit.test(
   "Create a file `" + pathWeb + "` in `" + dir + "`",
   function () {
     try {
@@ -42,7 +42,7 @@ test(
 });
 
 
-test(
+QUnit.test(
   "Subtract two numbers for the path /subtract",
   function () {
     require(dir+pathWeb);
@@ -73,7 +73,7 @@ test(
 );
 
 
-test(
+QUnit.test(
   "Return a 404 for all non-existent paths",
   function () {
     require(dir+pathWeb);
@@ -102,7 +102,7 @@ test(
 
 
 
-
+QUnit.module("Packages");
 
 
 /**
@@ -120,7 +120,7 @@ test(
  * to install express, so your webserver above works.
  * Do a similar thing to install the underscore package.
  */
-test(
+QUnit.test(
   "Create a file `" + pathUtil + "`",
   function () {
     try {
@@ -132,7 +132,7 @@ test(
 });
 
 
-test(
+QUnit.test(
   "Use `npm init` in `" + dir + "` to create a file `" + pathPkg + "`",
   function () {
     try {
@@ -144,7 +144,7 @@ test(
 });
 
 
-test(
+QUnit.test(
   "Use the right name and main in " + pathPkg + ".",
   function () {
     const pkg = require('./worksheet/package.json');
@@ -153,7 +153,7 @@ test(
 });
 
 
-test(
+QUnit.test(
   "Use the express and underscore packages.",
   function () {
     const pkg = require('./worksheet/package.json');
@@ -176,11 +176,11 @@ test(
 });
 
 
-test(
-  "Create a range function.",
+QUnit.test(
+  "Create a `range` function that accepts an array and returns the size of the range between the largest and smallest numbers.",
   function () {
     const util = require(dir+pathUtil);
-    implement _;
+    let _;
     try {
       _ = require('./worksheet/node_modules/underscore');
     } catch (e) {

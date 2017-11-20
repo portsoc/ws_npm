@@ -4,7 +4,7 @@
   "description": "introduction to node package management",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/qunit/bin/cli.js -c index.js -t test.js",
+    "test": "node ./node_modules/qunit/bin/cli.js -c index.js -t test.js | cat",
     "start": "node examples/http-express"
   },
   "keywords": [
@@ -16,10 +16,19 @@
   ],
   "license": "ISC",
   "devDependencies": {},
-  "repository": "https://github.com/portsoc/ws_npm.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/portsoc/ws_npm.git"
+  },
   "dependencies": {
     "express": "^4.16.2",
-    "qnit": "^0.18.1",
-    "qunit": "^2.4.1"
+    "qunit": "^0.9.1"
+  },
+  "bugs": {
+    "url": "https://github.com/portsoc/ws_npm/issues"
+  },
+  "homepage": "https://github.com/portsoc/ws_npm#readme",
+  "directories": {
+    "example": "examples"
   }
 }
