@@ -39,7 +39,8 @@ code and the test framework and then run the tests from the command line:
   ```bash
   npm test
   ```
-
+  On Windows, you must use Git Bash (or a similar terminal emulator) to run npm test
+  
 4. **Inside `test.js` you will find helpful comments that tell you what the tests expect.**
 
 Git: A recommendation
