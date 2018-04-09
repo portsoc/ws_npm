@@ -227,3 +227,76 @@ QUnit.test(
     equal(minCount, 3, "use underscore.min in your range function");
     equal(maxCount, 3, "use underscore.max in your range function");
   });
+
+  QUnit.module("To go further");
+
+  /**
+   * In the file `utility.js`, export a function called `multiplyArray` that takes two parameters,
+   * an array of numbers and a number. This function returns a new array which values are multiply by the number.
+   *
+   * The server should respond to requests on /multiplyArray, accepting
+   * two  parameters, a and b, and returning the array a multiplied by the number b as a plain text response.
+   *
+   * e.g. '/multiplyArray?a=2&a=3&b=3' should return [6,9]
+   * e.g. '/multiplyArray?a=-1&b=9' should return [-9]
+   * e.g. '/multiplyArray?b=0&a=2&a=3' should return [0,0]
+   *
+   * To extract the array from the url you might want to look into the map() function.
+   *
+   * Running the tests starts your web server, but if you want to try it in
+   * your browser, you need to start the webserver explicitly, with the command
+   * node worksheet/webserver
+   */
+
+  QUnit.test(
+    "Create a `multiplyArray` function that accepts two parameters, an array and a number. This function returns a new array which values are multiply by the number.",
+    function () {
+      const util = require(dir + pathUtil);
+
+      deepEqual(util.multiplyArray([4, 3], 1), [4, 3], "Result must be : [4,3]");
+      deepEqual(util.multiplyArray([3, 6], -3), [-9, -18], "Result must be : [-9,-18]");
+      deepEqual(util.multiplyArray([3], 0), [0], "Result must be : [0]");
+      deepEqual(util.multiplyArray([3, -1, 5], 6), [18, -6, 30], "Result must be : [18, -6, 35]");
+    });
+
+    QUnit.test(
+    "For the path /multiplyArray, create a server using the created function to multiply each element of an array(a) with another number(b).",
+    function () {
+      // this is the file you created in the Web Server task
+      // when we 'require' it, it loads and runs.
+      require(dir + pathWeb);
+
+      // begin stalling (we use stop() and start() in QUnit
+      // // to hand tests that feature callbacks.
+      stop();
+
+      // build an options object that can be used to make an HTTP request
+      const options = {
+        host: 'localhost',
+        port: '8080',
+        method: 'GET',
+        path: '/multiplyArray?a=1&a=2&a=-1&a=9&b=2',
+      };
+
+      //make the http request to the server.
+      const req = http.request(options, function (response) {
+        let str = '';
+
+        response.on('data', function (chunk) {
+          // combine the parts of the response (if it happens to be sent in parts)
+          str += chunk;
+        });
+
+        response.on('end', function () {
+          // when the last part arrives we can quit stalling.
+          equal(str.trim(), '[2,4,-2,18]', 'Test that calling /multiplyArray?a=1&a=2&a=-1&a=9&b=2 returns [2, 4, -2, 18]');
+          start();
+        });
+
+      });
+      req.on('error', function (e) {
+        ok(false);
+        start();
+      });
+      req.end();
+    });
