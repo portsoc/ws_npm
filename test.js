@@ -228,20 +228,15 @@ QUnit.test(
     equal(maxCount, 3, "use underscore.max in your range function");
   });
 
-  QUnit.module("To go further");
-
   /**
    * In the file `utility.js`, export a function called `multiplyArray` that takes two parameters,
    * an array of numbers and a number. This function returns a new array which values are multiply by the number.
    *
    * The server should respond to requests on /multiplyArray, accepting
-   * two  parameters, a and b, and returning the array a multiplied by the number b as a plain text response.
+   * two  parameters `a` and `b, and returning the array `a` multiplied by the number `b` as a plain text response.
    *
-   * e.g. '/multiplyArray?a=2&a=3&b=3' should return [6,9]
-   * e.g. '/multiplyArray?a=-1&b=9' should return [-9]
+   * e.g. '/multiplyArray?a=2&a9' should return [-9]
    * e.g. '/multiplyArray?b=0&a=2&a=3' should return [0,0]
-   *
-   * To extract the array from the url you might want to look into the map() function.
    *
    * Running the tests starts your web server, but if you want to try it in
    * your browser, you need to start the webserver explicitly, with the command
@@ -249,7 +244,7 @@ QUnit.test(
    */
 
   QUnit.test(
-    "Create a `multiplyArray` function that accepts two parameters, an array and a number. This function returns a new array which values are multiply by the number.",
+    "Create a `multiplyArray` function that accepts two parameters, an array and a number, and returns a new array whose values are multiplied by the number.",
     function () {
       const util = require(dir + pathUtil);
 
@@ -289,7 +284,7 @@ QUnit.test(
 
         response.on('end', function () {
           // when the last part arrives we can quit stalling.
-          equal(str.trim(), '[2,4,-2,18]', 'Test that calling /multiplyArray?a=1&a=2&a=-1&a=9&b=2 returns [2, 4, -2, 18]');
+          deepEqual(JSON.parse(str.trim()), [2,4,-2,18], "Test that calling /multiplyArray?a=1&a=2&a=-1&a=9&b=2 returns [2, 4, -2, 18]");
           start();
         });
 
