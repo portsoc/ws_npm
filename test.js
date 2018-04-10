@@ -233,7 +233,7 @@ QUnit.test(
    * an array of numbers and a number. This function returns a new array which values are multiply by the number.
    *
    * The server should respond to requests on /multiplyArray, accepting
-   * two  parameters `a` and `b, and returning the array `a` multiplied by the number `b` as a plain text response.
+   * two  parameters `a` and `b`, and returning the array `a` multiplied by the number `b` as a plain text response.
    *
    * e.g. '/multiplyArray?a=2&a9' should return [-9]
    * e.g. '/multiplyArray?b=0&a=2&a=3' should return [0,0]
@@ -284,7 +284,7 @@ QUnit.test(
 
         response.on('end', function () {
           // when the last part arrives we can quit stalling.
-          deepEqual(JSON.parse(str.trim()), [2,4,-2,18], "Test that calling /multiplyArray?a=1&a=2&a=-1&a=9&b=2 returns [2, 4, -2, 18]");
+          deepEqual(JSON.parse(str), [2,4,-2,18], "Test that calling /multiplyArray?a=1&a=2&a=-1&a=9&b=2 returns [2, 4, -2, 18]");
           start();
         });
 
