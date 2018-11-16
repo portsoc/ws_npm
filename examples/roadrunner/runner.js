@@ -1,5 +1,5 @@
 function run() {
-  console.log('mip-mip - zoooooooom!');
+  console.log('meep-meep - zoooooooom!');
 }
 
 module.exports.run = run; 
