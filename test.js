@@ -31,31 +31,33 @@ QUnit.module("Web Server");
  * `node worksheet/webserver`
  *
  * Use the `npm install underscore --save` command in the `worksheet` directory.
+ *
+ * Make sure to export the result of http.createServer,
+ * e.g. if you have `const app = express();` and `app.listen(...);`
+ * then use `module.exports = app.listen(...);`
  */
 QUnit.test(
   "Create a file `" + pathWeb + "` in `" + dir + "`",
-  function () {
+  function (assert) {
     try {
       // Try to access the file.  If it is there, we can continue to
       // the next line.  If it is NOT there, an error will be thrown.
       fs.accessSync(dir + pathWeb, fs.F_OK);
-      ok(true, pathWeb + " created");
+      assert.ok(true, pathWeb + " created");
     } catch (e) {
-      ok(false, pathWeb + " is missing - please create it");
+      assert.ok(false, pathWeb + " is missing - please create it");
     }
   });
 
 
 QUnit.test(
   "Subtract two numbers for the path /subtract",
-  function () {
+  function (assert) {
     // this is the file you created in the Web Server task
     // when we 'require' it, it loads and runs.
     require(dir + pathWeb);
 
-    // begin stalling (we use stop() and start() in QUnit
-    // // to hand tests that feature callbacks.
-    stop();
+    const done = assert.async();
 
     // build an options object that can be used to make an HTTP request
     const options = {
@@ -67,7 +69,7 @@ QUnit.test(
 
     //make the http request to the server.
     const req = http.request(options, function (response) {
-      equal(response.statusCode, 200, 'A successful call to /subtract should return a status code of 200');
+      assert.equal(response.statusCode, 200, 'A successful call to /subtract should return a status code of 200');
       let str = '';
 
       response.on('data', function (chunk) {
@@ -77,14 +79,14 @@ QUnit.test(
 
       response.on('end', function () {
         // when the last part arrives we can quit stalling.
-        equal(str.trim(), '-1.4', 'Test that calling /subtract?a=2&b=3.4 returns -1.4');
-        start();
+        assert.equal(str.trim(), '-1.4', 'Test that calling /subtract?a=2&b=3.4 returns -1.4');
+        done();
       });
 
     });
     req.on('error', function (e) {
-      ok(false);
-      start();
+      assert.ok(false);
+      done();
     });
     req.end();
   }
@@ -93,8 +95,8 @@ QUnit.test(
 
 QUnit.test(
   "Return a 404 for all non-existent paths",
-  function () {
-    require(dir + pathWeb);
+  function (assert) {
+    const server = require(dir + pathWeb);
     const options = {
       host: 'localhost',
       port: '8080',
@@ -102,16 +104,25 @@ QUnit.test(
       path: '/nothere',
     };
 
-    expect(1);
-    stop();
+    const done = assert.async();
 
     const req = http.request(options, function (response) {
-      equal(response.statusCode, 404, 'The server should return 404 for /nothere');
-      start();
+      assert.equal(response.statusCode, 404, 'The server should return 404 for /nothere');
+      done();
+      if (server.close) {
+        server.close();
+      } else {
+        console.log(`If this does not quit, ${pathWeb} probably needs to export the server.\nPress ctrl-c to end the test.`);
+      }
     });
     req.on('error', function (e) {
-      ok(false);
-      start();
+      assert.ok(false);
+      done();
+      if (server.close) {
+        server.close();
+      } else {
+        console.log(`If this does not quit, ${pathWeb} probably needs to export the server.\nPress ctrl-c to end the test.`);
+      }
     });
     req.end();
   }
@@ -138,63 +149,63 @@ QUnit.module("Packages");
  */
 QUnit.test(
   "Create a file `" + pathUtil + "`",
-  function () {
+  function (assert) {
     try {
       fs.accessSync(dir + pathUtil, fs.F_OK);
-      ok(true, pathUtil + " created");
+      assert.ok(true, pathUtil + " created");
     } catch (e) {
-      ok(false, pathUtil + " is missing - please create it");
+      assert.ok(false, pathUtil + " is missing - please create it");
     }
   });
 
 
 QUnit.test(
   "Use `npm init` in `" + dir + "` to create a file `" + pathPkg + "`",
-  function () {
+  function (assert) {
     try {
       fs.accessSync(dir + pathPkg, fs.F_OK);
-      ok(true, pathPkg + " created");
+      assert.ok(true, pathPkg + " created");
     } catch (e) {
-      ok(false, pathPkg + " is missing - please create it");
+      assert.ok(false, pathPkg + " is missing - please create it");
     }
   });
 
 
 QUnit.test(
   "Use the right name and main in " + pathPkg + ".",
-  function () {
+  function (assert) {
     const pkg = require('./worksheet/package.json');
-    equal(pkg.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
-    equal(pkg.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
+    assert.equal(pkg.name, 'worksheet', "`worksheet/package.json` should have the name 'worksheet'.");
+    assert.equal(pkg.main, 'utility.js', "`worksheet/package.json` should have 'main' set to 'utility.js'.");
   });
 
 
 QUnit.test(
   "Use the express and underscore packages.",
-  function () {
+  function (assert) {
     const pkg = require('./worksheet/package.json');
     const deps = pkg.dependencies;
-    ok(deps, "`worksheet/package.json` should have dependencies.");
-    ok(deps && deps.express, "The express package should be a dependency in worksheet/package.json.");
-    ok(deps && deps.underscore, "The underscore package should be a dependency in worksheet/package.json.");
+    assert.ok(deps, "`worksheet/package.json` should have dependencies.");
+    assert.ok(deps && deps.express, "The express package should be a dependency in worksheet/package.json.");
+    assert.ok(deps && deps.underscore, "The underscore package should be a dependency in worksheet/package.json.");
 
     let express;
     try {
       express = require('./worksheet/node_modules/express');
     } catch (e) {}
-    ok(express, 'express should be installed inside worksheet');
+    assert.ok(express, 'express should be installed inside worksheet');
 
     let _;
     try {
       _ = require('./worksheet/node_modules/underscore');
     } catch (e) {}
-    ok(_, 'underscore should be installed inside worksheet');
+    assert.ok(_, 'underscore should be installed inside worksheet');
   });
 
 
 QUnit.test(
   "Create a `range` function that accepts an array and returns the size of the range between the largest and smallest numbers.",
-  function () {
+  function (assert) {
     const util = require(dir + pathUtil);
     let _;
     try {
@@ -217,13 +228,13 @@ QUnit.test(
       return oldMax(arr);
     }
 
-    equal(util.range([4, 3]), 1, "[4,3] has a range of 1");
-    equal(minCount, 1, "use underscore.min in your range function");
-    equal(maxCount, 1, "use underscore.max in your range function");
-    equal(util.range([3]), 0, "[3] has a range of 0");
-    equal(minCount, 2, "use underscore.min in your range function");
-    equal(maxCount, 2, "use underscore.max in your range function");
-    equal(util.range([3, -1, 5]), 6, "[3, -1, 5] has a range of 6");
-    equal(minCount, 3, "use underscore.min in your range function");
-    equal(maxCount, 3, "use underscore.max in your range function");
+    assert.equal(util.range([4, 3]), 1, "[4,3] has a range of 1");
+    assert.equal(minCount, 1, "use underscore.min in your range function");
+    assert.equal(maxCount, 1, "use underscore.max in your range function");
+    assert.equal(util.range([3]), 0, "[3] has a range of 0");
+    assert.equal(minCount, 2, "use underscore.min in your range function");
+    assert.equal(maxCount, 2, "use underscore.max in your range function");
+    assert.equal(util.range([3, -1, 5]), 6, "[3, -1, 5] has a range of 6");
+    assert.equal(minCount, 3, "use underscore.min in your range function");
+    assert.equal(maxCount, 3, "use underscore.max in your range function");
   });

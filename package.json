@@ -4,7 +4,7 @@
   "description": "introduction to node package management",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/qunit/bin/cli.js -c index.js -t test.js | cat",
+    "test": "node ./node_modules/.bin/qunit test.js",
     "start": "node examples/http-express"
   },
   "keywords": [
@@ -15,14 +15,15 @@
     "Rich Boakes <rich@boakes.org> (http://boakes.org)"
   ],
   "license": "ISC",
-  "devDependencies": {},
+  "devDependencies": {
+    "qunit": "^2.9.3"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/portsoc/ws_npm.git"
   },
   "dependencies": {
-    "express": "^4.16.2",
-    "qunit": "^0.9.1"
+    "express": "^4.16.4"
   },
   "bugs": {
     "url": "https://github.com/portsoc/ws_npm/issues"
