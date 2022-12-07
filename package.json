@@ -23,7 +23,7 @@
     "url": "git+https://github.com/portsoc/ws_npm.git"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.18.2"
   },
   "bugs": {
     "url": "https://github.com/portsoc/ws_npm/issues"
